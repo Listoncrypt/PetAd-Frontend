@@ -10,7 +10,7 @@ export default function HomePage() {
     const [showOwnerModal, setShowOwnerModal] = useState(false);
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen max-w-screen overflow-x-hidden bg-white">
 
             {/* ── Hero Section ── */}
             <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#FFF2E5] to-white lg:min-h-[500px] flex items-center">
