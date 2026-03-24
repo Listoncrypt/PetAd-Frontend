@@ -33,16 +33,14 @@ function App() {
         <Route path="/favourites" element={<FavouritePage />} />
         <Route path="/interests" element={<InterestPage />} />
         <Route path="/listings" element={<ListingsPage />} />
+        <Route path="/listings/:id" element={<PetListingDetailsPage />} />
+        <Route path="/list-for-adoption" element={<EditAdoptionListing />} />
+        <Route path="/my-listings/:id" element={<ListingDetailsPage />} />
         <Route path="/notifications" element={<NotificationPage />} />
 
         {/* Preview Routes */}
         <Route path="/preview-modal" element={<ModalPreview />} />
         <Route path="/adoption-completion-demo" element={<AdoptionCompletionDemo />} />
-
-        {/* Test Route */}
-        <Route path="/listings/:id" element={<PetListingDetailsPage />} />
-        <Route path="/list-for-adoption" element={<EditAdoptionListing />} />
-        <Route path="/my-listings/:id" element={<ListingDetailsPage />} />
       </Route>
     </Routes>
   );
