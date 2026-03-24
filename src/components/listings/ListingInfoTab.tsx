@@ -19,14 +19,14 @@ export default function ListingInfoTab() {
   const [activeImage, setActiveImage] = useState(0);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[160px_1fr_1fr] gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-[80px_1fr_1fr] gap-4">
       {/* Thumbnails */}
-      <div className="hidden lg:flex flex-col gap-3">
+      <div className="hidden lg:flex flex-col gap-2">
         {mockListing.images.map((img, i) => (
           <button
             key={i}
             onClick={() => setActiveImage(i)}
-            className={`w-[152px] h-[120px] rounded-xl overflow-hidden border-2 transition-all ${
+            className={`w-[76px] h-[76px] rounded-lg overflow-hidden border-2 transition-all ${
               activeImage === i
                 ? "border-[#E84D2A]"
                 : "border-gray-200 hover:border-gray-300"
@@ -42,11 +42,11 @@ export default function ListingInfoTab() {
       </div>
 
       {/* Main image */}
-      <div className="rounded-2xl overflow-hidden bg-gray-100">
+      <div className="rounded-xl overflow-hidden bg-gray-100">
         <img
           src={mockListing.images[activeImage]}
           alt={mockListing.name}
-          className="w-full h-[420px] object-cover"
+          className="w-full h-[460px] object-cover"
         />
         {/* Mobile thumbnails */}
         <div className="flex gap-2 p-3 lg:hidden">
