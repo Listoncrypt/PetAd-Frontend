@@ -14,12 +14,23 @@ const queryClient = new QueryClient({
   },
 })
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter> {/* 2. Wrap your App */}
-        <App />
-      </BrowserRouter>
-    </QueryClientProvider>
-  </StrictMode>,
-)
+async function bootstrap() {
+  // Enable MSW mock API in development when VITE_MSW=true.
+  // The dynamic import keeps the MSW worker out of the production bundle.
+  if (import.meta.env.VITE_MSW === 'true') {
+    const { worker } = await import('./mocks/browser')
+    await worker.start({ onUnhandledRequest: 'warn' })
+  }
+
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter> {/* 2. Wrap your App */}
+          <App />
+        </BrowserRouter>
+      </QueryClientProvider>
+    </StrictMode>,
+  )
+}
+
+bootstrap()
