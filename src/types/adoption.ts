@@ -14,4 +14,10 @@ export interface AdoptionTimelineEntry {
   sdkEvent: string;
   message: string;
   actor?: string;
+  actorRole?: string;
+  fromStatus?: AdoptionStatus;
+  toStatus?: AdoptionStatus;
+  sdkTxHash?: string;
+  isAdminOverride?: boolean;
+  reason?: string;
 }
