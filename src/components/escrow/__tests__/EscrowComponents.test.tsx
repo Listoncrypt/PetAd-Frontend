@@ -10,8 +10,8 @@ import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import { AdoptionCompleteButton } from "../AdoptionCompleteButton";
 import {
   EscrowFundedBanner,
-  getEscrowFundedBannerStorageKey,
 } from "../EscrowFundedBanner";
+import { getEscrowFundedBannerStorageKey } from "../escrowBannerConstants";
 import { EscrowStatusCard } from "../EscrowStatusCard";
 import { StellarTxLink } from "../StellarTxLink";
 import type { EscrowStatusData, SettlementSummary } from "../types";

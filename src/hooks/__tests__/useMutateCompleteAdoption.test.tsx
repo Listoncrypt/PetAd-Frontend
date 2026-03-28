@@ -16,7 +16,7 @@ function createWrapper() {
       queries: { retry: false },
     },
   });
-  (queryClient as any)._uid = "test-" + Math.random().toString(36).substring(2, 5);
+  (queryClient as unknown as { _uid: string })._uid = "test-" + Math.random().toString(36).substring(2, 5);
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
