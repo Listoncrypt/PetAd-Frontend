@@ -24,9 +24,9 @@ function writeToUrl(state: Record<string, unknown>) {
 
   Object.entries(state).forEach(([key, value]) => {
     if (Array.isArray(value)) {
-      value.forEach((v) => params.append(key, v as string));
+      value.forEach((v) => params.append(key, String(v)));
     } else if (value !== undefined && value !== null) {
-      params.set(key, value as string);
+      params.set(key, String(value));
     }
   });
 
@@ -41,7 +41,7 @@ export function useUrlSync<T extends Record<string, unknown>>(defaults: T) {
 
   const setUrlState = useCallback((next: T) => {
     setState(next);
-    writeToUrl(next);
+    writeToUrl(next as Record<string, unknown>);
   }, []);
 
   useEffect(() => {

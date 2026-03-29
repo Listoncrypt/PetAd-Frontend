@@ -17,7 +17,6 @@ export function usePolling<TData>(
 	const [isTabVisible, setIsTabVisible] = useState(
 		typeof document !== "undefined" ? !document.hidden : true,
 	);
-	const [shouldStop, setShouldStop] = useState(false);
 	// Ref mirrors shouldStop so refetchInterval sees updated value synchronously
 	const shouldStopRef = useRef(false);
 
@@ -39,7 +38,7 @@ export function usePolling<TData>(
 	const query = useQuery({
 		queryKey,
 		queryFn: fetchFn,
-		enabled: enabled && !shouldStop,
+		enabled: enabled,
 		refetchInterval: (query) => {
 			const data = query.state.data;
 
@@ -51,7 +50,6 @@ export function usePolling<TData>(
 			// Check if we should stop polling based on data condition
 			if (stopWhen && data && stopWhen(data)) {
 				shouldStopRef.current = true;
-				setShouldStop(true);
 				return false;
 			}
 
@@ -62,6 +60,9 @@ export function usePolling<TData>(
 
 			return intervalMs;
 		},
+		refetchOnWindowFocus: false,
+		refetchOnReconnect: false,
+		refetchOnMount: false,
 	});
 
 	return query;

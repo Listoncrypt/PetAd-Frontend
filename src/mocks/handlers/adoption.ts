@@ -50,11 +50,11 @@ const MOCK_ADOPTION_DETAILS: AdoptionDetails = {
 };
 
 export const adoptionHandlers = [
-  http.get("/api/adoption/:id/timeline", async () => {
+  http.get("*/api/adoption/:id/timeline", async () => {
     await delay(100);
     return HttpResponse.json(MOCK_TIMELINE);
   }),
-  http.get("/api/adoption/:id", async ({ params }) => {
+  http.get("*/api/adoption/:id", async ({ params }) => {
     await delay(100);
     const { id } = params;
 
@@ -63,6 +63,18 @@ export const adoptionHandlers = [
     }
 
     return HttpResponse.json({ error: "Adoption not found" }, { status: 404 });
+  }),
+  http.post("*/api/adoption/:id/complete", async ({ params }) => {
+    await delay(100);
+    const { id } = params;
+    if (id === "fail") {
+      return new HttpResponse(null, { status: 500 });
+    }
+    return new HttpResponse(null, { status: 204 });
+  }),
+  http.get("*/api/adoption/:id/approvals", async () => {
+    await delay(100);
+    return HttpResponse.json([]);
   }),
 
 ];

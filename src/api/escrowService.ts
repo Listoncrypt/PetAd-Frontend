@@ -1,16 +1,13 @@
 import { apiClient } from "../lib/api-client";
 import type { SettlementSummary } from "../types/escrow";
 
+
 /**
  * escrowService
  *
  * Real escrow API calls via the api-client.
  */
 export const escrowService = {
-  /**
-   * Retry a failed settlement for the given escrow.
-   * @param escrowId - The ID of the escrow to retry settlement for.
-   */
   async retrySettlement(escrowId: string): Promise<void> {
     return apiClient.post(`/escrow/${escrowId}/retry-settlement`);
   },

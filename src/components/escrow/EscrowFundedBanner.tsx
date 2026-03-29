@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { formatAmount } from "./types";
-import { getEscrowFundedBannerStorageKey } from "./escrowBannerConstants";
+import { formatAmount, getEscrowFundedBannerStorageKey } from "./types";
 
 interface EscrowFundedBannerProps {
   escrowId: string;

@@ -3,7 +3,7 @@ import type { CustodyDetails } from "../../types/adoption";
 
 const MOCK_CUSTODY_DETAILS: CustodyDetails = {
   id: "custody-1",
-  status: "CUSTODY_ACTIVE",
+  status: "ACTIVE",
   petId: "pet-1",
   custodianId: "user-1",
   ownerId: "user-2",
@@ -13,7 +13,7 @@ const MOCK_CUSTODY_DETAILS: CustodyDetails = {
 };
 
 export const custodyHandlers = [
-  http.get("/api/custody/:id", async ({ params }) => {
+  http.get("*/api/custody/:id", async ({ params }) => {
     await delay(100);
     const { id } = params;
     
@@ -27,7 +27,7 @@ export const custodyHandlers = [
     );
   }),
 
-  http.get("/api/custody/:id/timeline", async () => {
+  http.get("*/api/custody/:id/timeline", async () => {
     await delay(100);
     return HttpResponse.json([
       {

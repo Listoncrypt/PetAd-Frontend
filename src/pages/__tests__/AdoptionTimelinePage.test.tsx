@@ -5,13 +5,12 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import AdoptionTimelinePage from "../AdoptionTimelinePage";
 import { useAdoptionTimeline } from "../../hooks/useAdoptionTimeline";
+import type { AdoptionTimelineEntry } from "../../types/adoption";
 
 vi.mock("../../hooks/useAdoptionTimeline", () => ({
   useAdoptionTimeline: vi.fn(),
 }));
 
-// Mock the TimelineEntry UI component to simplify testing the page's structure and logic
-import type { AdoptionTimelineEntry } from "../../types/adoption";
 
 vi.mock("../../components/ui/TimelineEntry", () => ({
   TimelineEntry: ({ entry }: { entry: AdoptionTimelineEntry }) => (
@@ -22,7 +21,7 @@ vi.mock("../../components/ui/TimelineEntry", () => ({
 const getTodayString = () => new Date().toISOString();
 const getEarlierString = () => new Date(Date.now() - 86400000 * 3).toISOString();
 
-const mockEntries = [
+const mockEntries: AdoptionTimelineEntry[] = [
   {
     id: "1",
     adoptionId: "123",
@@ -39,7 +38,7 @@ const mockEntries = [
     timestamp: getEarlierString(),
     sdkEvent: "event2",
     message: "Message 2",
-    fromStatus: null,
+    fromStatus: undefined,
     toStatus: "ESCROW_CREATED",
     actor: "System",
   }
@@ -84,7 +83,7 @@ describe("AdoptionTimelinePage", () => {
 
   it("renders entries grouped by date", () => {
     vi.mocked(useAdoptionTimeline).mockReturnValue({
-      entries: mockEntries as AdoptionTimelineEntry[],
+      entries: mockEntries,
       isLoading: false,
       isError: false,
     });

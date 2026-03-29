@@ -1,3 +1,4 @@
+
 export const ESCROW_STATUSES = [
   "AWAITING_FUNDS",
   "FUNDED",
@@ -21,6 +22,8 @@ export interface EscrowStatusData {
   failureReason?: string;
   txHash?: string;
   balance?: string | number;
+  disputeId?: string;
+  disputeRaisedAt?: string;
 }
 
 export interface SettlementSummary {
@@ -55,4 +58,8 @@ export const ON_CHAIN_TO_ESCROW_STATUS: Record<string, EscrowStatus> = {
 
 export function formatAmount(amount: number, currency = "USDC") {
   return `${currency} ${amount.toFixed(2)}`;
+}
+
+export function getEscrowFundedBannerStorageKey(escrowId: string) {
+  return `escrow-funded-banner-dismissed:${escrowId}`;
 }

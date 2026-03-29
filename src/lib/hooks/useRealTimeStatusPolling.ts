@@ -45,38 +45,31 @@ export function useRealTimeStatusPolling(
     stopWhen,
   });
 
-  // Track status changes and trigger pulse animation
-  useEffect(() => {
-    const currentStatus = query.data?.status;
+  const currentStatus = query.data?.status;
 
-    if (!currentStatus) {
-      return;
-    }
+  // Track status changes and trigger pulse animation inside useEffect (purity)
+  useEffect(() => {
+    if (!currentStatus) return;
 
     if (previousStatusRef.current === undefined) {
       previousStatusRef.current = currentStatus;
       return;
     }
 
-    if (previousStatusRef.current !== currentStatus) {
+    if (currentStatus !== previousStatusRef.current) {
       previousStatusRef.current = currentStatus;
-
-      // Defer setState to avoid synchronous state update in effect body
-      const timer = setTimeout(() => {
-        setStatusChanged(true);
-      }, 0);
+      
+      // Trigger status changed animation
+      setStatusChanged(true);
 
       // Reset the flag after 3 seconds
       const resetTimer = setTimeout(() => {
         setStatusChanged(false);
       }, 3000);
 
-      return () => {
-        clearTimeout(timer);
-        clearTimeout(resetTimer);
-      };
+      return () => clearTimeout(resetTimer);
     }
-  }, [query.data?.status]);
+  }, [currentStatus]);
 
   return {
     data: query.data,

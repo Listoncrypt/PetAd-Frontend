@@ -68,8 +68,10 @@ export function SignInForm() {
             navigate("/home"); // Redirect to homepage after successful sign in
             // NOTE: Here you would typically redirect or dispatch a login action
         } catch (err: unknown) {
-            const message = err instanceof Error ? err.message : "Failed to sign in. Please try again.";
-            setErrors((prev) => ({ ...prev, submit: message }));
+            setErrors((prev) => ({ 
+                ...prev, 
+                submit: err instanceof Error ? err.message : "Failed to sign in. Please try again." 
+            }));
         } finally {
             setIsLoading(false);
         }

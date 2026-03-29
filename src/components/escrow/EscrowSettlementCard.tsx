@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useEscrowStatus } from "../../lib/hooks/useEscrowStatus";
 import { type EscrowStatus } from "./types";
 import { EscrowStatusBadge } from "./EscrowStatusBadge";
@@ -11,30 +11,30 @@ interface EscrowSettlementCardProps {
 
 export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
   const { data, isLoading, isError, refetch } = useEscrowStatus(escrowId);
-  const lastUpdatedRef = useRef<number>(0);
-  const [secondsAgo, setSecondsAgo] = useState<number>(0);
+  const [lastUpdated, setLastUpdated] = useState<number>(() => Date.now());
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
 
-  // Set initial lastUpdated on mount
-  useEffect(() => {
-    lastUpdatedRef.current = Date.now();
-  }, []);
-
-  // Track when data last changed via a ref (no re-render needed)
+  // Use an effect with a deferred state update to satisfy both:
+  // 1. react-hooks/purity: Avoid calling Date.now() during render.
+  // 2. react-hooks/set-state-in-effect: Avoid synchronous setState in effect body.
   useEffect(() => {
     if (data) {
-      lastUpdatedRef.current = Date.now();
+      const timer = setTimeout(() => {
+        setLastUpdated(Date.now());
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
-  // Tick every 10 seconds — setState only inside the timer callback
+  // Update current time every 10 seconds to refresh the "seconds ago" label
   useEffect(() => {
-    const tick = () => {
-      setSecondsAgo(Math.floor((Date.now() - lastUpdatedRef.current) / 1000));
-    };
-
-    const interval = setInterval(tick, 10000);
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  const secondsAgo = Math.floor((currentTime - lastUpdated) / 1000);
 
   if (isLoading || !data) {
     return (
@@ -80,7 +80,9 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
   const balance = String(data?.balance ?? "0");
 
   return (
-    <div className="group relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-500 hover:shadow-2xl">
+    <div 
+      className="group relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-500 hover:shadow-2xl"
+    >
       {/* Background radial highlight */}
       <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-indigo-50/50 blur-3xl transition-all duration-700 group-hover:bg-indigo-100/50" />
       
@@ -89,7 +91,7 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
           <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
             Escrow State
           </span>
-          <EscrowStatusBadge status={(data?.status ?? "AWAITING_FUNDS") as EscrowStatus} />
+          <EscrowStatusBadge status={(data?.status as EscrowStatus) || "AWAITING_FUNDS"} />
         </div>
 
         <div className="mt-8">

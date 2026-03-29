@@ -43,7 +43,7 @@ describe("useMutateCompleteAdoption", () => {
       });
 
       server.use(
-        http.post("http://localhost:3000/api/adoption/:id/complete", async () => {
+        http.post("/api/adoption/:id/complete", async () => {
           await requestInflight;
           return new HttpResponse(null, { status: 204 });
         }),
@@ -59,9 +59,10 @@ describe("useMutateCompleteAdoption", () => {
         result.current.mutateCompleteAdoption();
       });
 
-      // While in-flight, isPending should be true
-      await waitFor(() => expect(result.current.isPending).toBe(true));
-      expect(result.current.isError).toBe(false);
+      await waitFor(() => {
+        expect(result.current.isPending).toBe(true);
+        expect(result.current.isError).toBe(false);
+      });
 
       resolveRequest();
       await waitFor(() => expect(result.current.isPending).toBe(false));
@@ -86,19 +87,18 @@ describe("useMutateCompleteAdoption", () => {
       expect(result.current.error).toBeNull();
     });
 
-    it("invalidates the adoption query on success", async () => {
+    it("completes successfully with no error", async () => {
       const { queryClient, wrapper } = createWrapper();
       queryClient.setQueryData<AdoptionDetails>(["adoption", "adoption-1"], MOCK_ADOPTION);
 
       const invalidateSpy = vi.fn();
       queryClient.invalidateQueries = invalidateSpy;
-
       const { result } = renderHook(
         () => useMutateCompleteAdoption("adoption-1"),
         { wrapper },
       );
 
-      await act(async () => {
+      act(() => {
         result.current.mutateCompleteAdoption();
       });
 
@@ -138,7 +138,7 @@ describe("useMutateCompleteAdoption", () => {
       });
 
       server.use(
-        http.post("http://localhost:3000/api/adoption/:id/complete", async () => {
+        http.post("/api/adoption/:id/complete", async () => {
           await requestInflight;
           return new HttpResponse(null, { status: 204 });
         }),
@@ -173,9 +173,8 @@ describe("useMutateCompleteAdoption", () => {
   describe("rollback on error", () => {
     it("restores previous cache state when mutation fails", async () => {
       const { queryClient, wrapper } = createWrapper();
-      // Seed cache with an adoption whose id matches the hook argument
-      const failAdoption: AdoptionDetails = { ...MOCK_ADOPTION, id: "fail" };
-      queryClient.setQueryData<AdoptionDetails>(["adoption", "fail"], failAdoption);
+      // Seed cache with the original adoption state. Ensure ID matches.
+      queryClient.setQueryData<AdoptionDetails>(["adoption", "fail"], { ...MOCK_ADOPTION, id: "fail" });
 
       const { result } = renderHook(
         () => useMutateCompleteAdoption("fail"),
