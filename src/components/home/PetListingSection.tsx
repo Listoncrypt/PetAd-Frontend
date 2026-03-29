@@ -1,18 +1,7 @@
 import { useState, useMemo } from "react";
 import { PetCard, type Pet } from "../ui/PetCard";
 import { FormSelect } from "../ui/formSelect";
-import { MOCK_LISTINGS } from "./petListingData";
-
-const CATEGORY_OPTIONS = [
-    { value: "all", label: "Category: All" },
-    { value: "dog", label: "Dog" },
-    { value: "cat", label: "Cat" },
-    { value: "bird", label: "Bird" },
-];
-
-interface PetListingSectionProps {
-    onOwnerClick?: () => void;
-}
+import { MOCK_LISTINGS, CATEGORY_OPTIONS, type PetListingSectionProps } from "./petListingData";
 
 export function PetListingSection({ onOwnerClick }: PetListingSectionProps) {
     const [pets, setPets] = useState<Pet[]>(MOCK_LISTINGS);

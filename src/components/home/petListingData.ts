@@ -142,3 +142,14 @@ export const MOCK_LISTINGS: Pet[] = [
         isInterested: false,
     },
 ];
+
+export const CATEGORY_OPTIONS = [
+    { value: "all", label: "Category: All" },
+    { value: "dog", label: "Dog" },
+    { value: "cat", label: "Cat" },
+    { value: "bird", label: "Bird" },
+];
+
+export interface PetListingSectionProps {
+    onOwnerClick?: () => void;
+}

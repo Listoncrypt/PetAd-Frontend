@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useEscrowStatus } from "../../lib/hooks/useEscrowStatus";
+import { type EscrowStatus } from "./types";
 import { EscrowStatusBadge } from "./EscrowStatusBadge";
 import { Skeleton } from "../ui/Skeleton";
 import { RefreshCw, AlertCircle } from "lucide-react";
@@ -35,7 +36,7 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
     return () => clearInterval(interval);
   }, []);
 
-  if (isLoading && !data) {
+  if (isLoading || !data) {
     return (
       <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-xl backdrop-blur-sm">
         <div className="flex items-center justify-between">
@@ -76,7 +77,7 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
     );
   }
 
-  const balance = String((data as Record<string, unknown>)?.balance ?? "0");
+  const balance = String(data?.balance ?? "0");
 
   return (
     <div className="group relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-xl transition-all duration-500 hover:shadow-2xl">
@@ -88,7 +89,7 @@ export function EscrowSettlementCard({ escrowId }: EscrowSettlementCardProps) {
           <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
             Escrow State
           </span>
-          <EscrowStatusBadge status={((data?.status as string) || "AWAITING_FUNDS") as import("./types").EscrowStatus} />
+          <EscrowStatusBadge status={(data?.status ?? "AWAITING_FUNDS") as EscrowStatus} />
         </div>
 
         <div className="mt-8">

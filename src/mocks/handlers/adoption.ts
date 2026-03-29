@@ -65,26 +65,4 @@ export const adoptionHandlers = [
     return HttpResponse.json({ error: "Adoption not found" }, { status: 404 });
   }),
 
-  // POST /api/adoption/:id/complete — trigger settlement completion
-  http.post("/api/adoption/:id/complete", async ({ params }) => {
-    await delay(100);
-    const { id } = params;
-
-    if (id === "fail") {
-      return HttpResponse.json({ error: "Failed to complete adoption" }, { status: 500 });
-    }
-
-    return new HttpResponse(null, { status: 204 });
-  }),
-
-  // PATCH /api/adoption/:id/status
-  http.patch("/api/adoption/:id/status", async ({ params, request }) => {
-    await delay(100);
-    const body = await request.json() as { status: string };
-    return HttpResponse.json({
-      id: params.id,
-      toStatus: body.status,
-      timestamp: new Date().toISOString()
-    });
-  }),
 ];

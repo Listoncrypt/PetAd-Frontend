@@ -2,14 +2,7 @@ import { EscrowProgressStepper } from "./EscrowProgressStepper";
 import { EscrowStatusBadge } from "./EscrowStatusBadge";
 import { StellarTxLink } from "./StellarTxLink";
 import { usePolling } from "../../lib/hooks/usePolling";
-import { formatAmount, type EscrowStatusData } from "./types";
-
-interface EscrowStatusCardProps {
-  escrowId: string;
-  initialData?: EscrowStatusData;
-  fetchStatus?: () => Promise<EscrowStatusData>;
-  pollingIntervalMs?: number;
-}
+import { formatAmount, type EscrowStatusData, type EscrowStatusCardProps } from "./types";
 
 export function EscrowStatusCard({
   escrowId,

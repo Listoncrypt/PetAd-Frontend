@@ -7,20 +7,13 @@ import { AdoptionCompleteButton } from "../components/escrow/AdoptionCompleteBut
 import { StellarTxLink } from "../components/escrow/StellarTxLink";
 import { Skeleton } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/emptyState";
-import type { EscrowStatus, SettlementSummary } from "../components/escrow/types";
-import type { EscrowOnChainStatus } from "../types/escrow";
+import { 
+  type EscrowStatus, 
+  type SettlementSummaryPageProps,
+  ON_CHAIN_TO_ESCROW_STATUS 
+} from "../components/escrow/types";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-/**
- * Map the API-level on-chain status to the EscrowStatus union that
- * EscrowStatusBadge understands.
- */
-const ON_CHAIN_TO_ESCROW_STATUS: Record<EscrowOnChainStatus, EscrowStatus> = {
-  PENDING:  "IN_REVIEW",
-  SUCCESS:  "SETTLED",
-  FAILED:   "SETTLEMENT_FAILED",
-};
 
 /**
  * Extract the raw transaction hash from a Stellar explorer URL.
@@ -54,15 +47,6 @@ function PaymentRowSkeleton() {
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────────
-
-interface SettlementSummaryPageProps {
-  /** Pass summary directly (for testing / storybook) instead of fetching from API */
-  summary?: SettlementSummary;
-  /** Called when the admin confirms adoption completion. */
-  onComplete?: () => void;
-  /** When true, shows the admin-only controls. */
-  isAdmin?: boolean;
-}
 
 export function SettlementSummaryPage({ isAdmin = false, summary: summaryProp, onComplete }: SettlementSummaryPageProps) {
   // ── Always call hooks unconditionally (rules-of-hooks) ──────────────────────
