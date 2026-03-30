@@ -4,10 +4,13 @@ import { useRetrySettlement } from "../hooks/useRetrySettlement";
 import { EscrowStatusBadge } from "../components/escrow/EscrowStatusBadge";
 import { EscrowFundedBanner } from "../components/escrow/EscrowFundedBanner";
 import { AdoptionCompleteButton } from "../components/escrow/AdoptionCompleteButton";
-import { StellarTxLink } from "../components/escrow/StellarTxLink";
+import { StellarTxLink } from "../components/ui/StellarTxLink";
 import { Skeleton } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/emptyState";
 import { ApprovalStatusWidget } from "../components/approval/ApprovalStatusWidget";
+import { ApproverRow } from "../components/approval/ApproverRow";
+import { useSubmitSignature } from "../hooks/useSubmitSignature";
+import { Loader2 } from "lucide-react";
 import { useEscrowStatus } from "../lib/hooks/useEscrowStatus";
 import { 
   type EscrowStatus, 
@@ -76,6 +79,24 @@ export function SettlementSummaryPage({
   const txHash = data?.stellarExplorerUrl
     ? extractTxHash(data.stellarExplorerUrl)
     : propSummary?.escrow.txHash;
+
+  const { mutateSubmitSignature, isPending: isSigning } = useSubmitSignature();
+  
+  const currentUserPublicKey = import.meta.env.VITE_STELLAR_PUBLIC_KEY || "G_MOCK_USER_PUBLIC_KEY";
+
+  const approvers = data?.payments.map(p => p.destination) || [];
+  const isEligibleToSign = approvers.includes(currentUserPublicKey) && 
+    !(statusData?.signatures.some(s => s.signer === currentUserPublicKey));
+  const hasAlreadySigned = approvers.includes(currentUserPublicKey) && 
+    !!(statusData?.signatures.some(s => s.signer === currentUserPublicKey));
+
+  const handleSign = () => {
+    if (!escrowId) return;
+    mutateSubmitSignature({
+      escrowId,
+      publicKey: currentUserPublicKey
+    });
+  };
 
   const totalAmount = data?.payments.reduce((sum, p) => sum + p.amount, 0) ?? 0;
   const escrowStatus: EscrowStatus | undefined = propSummary?.status 
@@ -156,7 +177,7 @@ export function SettlementSummaryPage({
             <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
               Settlement Transaction
             </p>
-            <StellarTxLink txHash={txHash} />
+            <StellarTxLink id={txHash} type="tx" />
           </div>
         )}
 
@@ -241,12 +262,50 @@ export function SettlementSummaryPage({
 
         {/* ── Approval Quorum Widget ── */}
         {!isLoading && !statusLoading && statusData && (
-          <div className="pt-4">
+          <div className="pt-4 space-y-4">
             <ApprovalStatusWidget
               received={statusData.signatures.length}
               required={statusData.required_approvals}
               escrowAccountId={statusData.escrow_account_id}
             />
+            {data && data.payments.length > 0 && (
+              <div className="space-y-3 pt-2">
+                <h3 className="text-sm font-semibold text-gray-700 px-1">Required Approvers</h3>
+                {data.payments.map((payment) => (
+                  <ApproverRow
+                    key={payment.id}
+                    approver={{ 
+                      publicKey: payment.destination, 
+                      name: `Approver (${payment.destination.slice(0, 4)}...${payment.destination.slice(-4)})` 
+                    }}
+                    signatures={statusData.signatures}
+                    currentUserPublicKey={currentUserPublicKey} 
+                  />
+                ))}
+              </div>
+            )}
+            
+            {isEligibleToSign && (
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleSign}
+                  disabled={isSigning}
+                  className="flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {isSigning && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSigning ? "Submitting Signature..." : "Sign & Approve Escrow"}
+                </button>
+              </div>
+            )}
+
+            {hasAlreadySigned && (
+              <div className="pt-2">
+                <div role="status" className="flex w-full justify-center items-center rounded-lg bg-green-50 px-4 py-2.5 text-sm font-semibold text-green-700 border border-green-200">
+                  Signature Submitted
+                </div>
+              </div>
+            )}
           </div>
         )}
 

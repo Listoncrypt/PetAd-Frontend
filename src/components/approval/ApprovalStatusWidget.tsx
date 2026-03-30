@@ -1,5 +1,6 @@
 import React from 'react';
-import { ExternalLink, CheckCircle2, Users } from 'lucide-react';
+import { CheckCircle2, Users } from 'lucide-react';
+import { StellarTxLink } from '../ui/StellarTxLink';
 
 export interface ApprovalStatusWidgetProps {
   /** Current number of approvals received */
@@ -70,16 +71,12 @@ export const ApprovalStatusWidget: React.FC<ApprovalStatusWidgetProps> = ({
 
         {escrowAccountId && (
           <div className="pt-4 border-t border-slate-100">
-            <a
-              href={`https://stellar.expert/explorer/testnet/account/${escrowAccountId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group"
-              data-testid="stellar-explorer-link"
-            >
-              View Escrow on Stellar Expert
-              <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            <StellarTxLink
+              id={escrowAccountId}
+              type="account"
+              label="View Escrow on Stellar Expert"
+              className="group-hover:-translate-y-0.5 transition-transform"
+            />
           </div>
         )}
       </div>

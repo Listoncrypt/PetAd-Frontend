@@ -1,6 +1,6 @@
 import { EscrowProgressStepper } from "./EscrowProgressStepper";
 import { EscrowStatusBadge } from "./EscrowStatusBadge";
-import { StellarTxLink } from "./StellarTxLink";
+import { StellarTxLink } from "../ui/StellarTxLink";
 import { usePolling } from "../../lib/hooks/usePolling";
 import { formatAmount, type EscrowStatusData, type EscrowStatusCardProps } from "./types";
 import { DisputeBanner } from "./DisputeBanner";
@@ -94,7 +94,7 @@ export function EscrowStatusCard({
             Transaction
           </p>
           <div className="mt-2">
-            <StellarTxLink txHash={data.txHash} />
+            <StellarTxLink id={data.txHash} type="tx" />
           </div>
         </div>
       ) : null}

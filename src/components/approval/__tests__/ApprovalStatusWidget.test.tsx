@@ -27,7 +27,7 @@ describe("ApprovalStatusWidget", () => {
     const testAccountId = "GBX2X...MOCK";
     render(<ApprovalStatusWidget received={3} required={3} escrowAccountId={testAccountId} />);
     
-    const link = screen.getByTestId("stellar-explorer-link");
+    const link = screen.getByTestId("stellar-tx-link");
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", expect.stringContaining(testAccountId));
     expect(link).toHaveAttribute("target", "_blank");
