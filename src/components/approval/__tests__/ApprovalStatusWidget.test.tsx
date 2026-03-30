@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ApprovalStatusWidget } from "../ApprovalStatusWidget";
-import React from "react";
 
 describe("ApprovalStatusWidget", () => {
   it("Verify the progress bar width correctly reflects the percentage (e.g., 2 of 4 is 50%)", () => {

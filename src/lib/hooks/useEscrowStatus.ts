@@ -19,6 +19,7 @@ export interface EscrowStatusResponse {
 	signatures: EscrowSignature[];
 	required_approvals: number;
 	escrow_account_id: string;
+	balance: string;
 }
 
 export interface UseEscrowStatusOptions
